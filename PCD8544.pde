@@ -1,12 +1,13 @@
-// PCD8544, 84x48 Pixel LCD
-// http://www.sparkfun.com/products/10168
+/* PCD8544, 84x48 Pixel LCD
+ * http://www.sparkfun.com/products/10168
 
-// This code expands upon what I found here
-// http://www.arduino.cc/playground/Code/PCD8544
-// http://www.arduino.cc/playground/Code/PrintFloats
-
-// The main addition is setPixel(), which lets you set pixels
-// on/off at a specific x,y coordinate.
+ * This code expands upon what I found here
+ * http://www.arduino.cc/playground/Code/PCD8544
+ * http://www.arduino.cc/playground/Code/PrintFloats
+ 
+ * The main addition is setPixel(), which lets you set pixels
+ * on/off at a specific x,y coordinate.
+*/
 
 #include <stdlib.h>
 #define PIN_SCE   7  // LCD CS  .... Pin 3
@@ -274,75 +275,12 @@ void setup(void) {
 
 void loop(void) {
 
-  float lat,lon;
-  //37:47:36N 122:33:17W   37.79333333333334,122.55472222222222
- 
-  lat = 37.793;
-  lon = -122.555;
-  int x, y;
-  
-  x = xForLon(lon);
-  y = yForLat(lat);
-  Serial.print(x); Serial.print(", "); Serial.println(y);
-  
-  int en=0;
-  while (1) {
-      setPixel(x,y,!en);
-      en =!en;
-      delay(500);
-  }
- // int x = random(0,50);
-  //int y = random(0,15);
- // LcdClear();
- // clearPixels();
- // drawMac(x,y);
- // delay(1000);
 }
 
-int xForLon(float lon)
-{
-  int i_lon = (int) lon;
-  int bucket = lon / 10;
-  if (bucket < 0) { bucket = bucket*-1; }
-  float pxPerUnit = 0.2167;
-  switch (bucket) {
-    case 0: 
-    case 1: 
-    case 2:
-    case 3: 
-    case 4:
-    case 5:
-    case 6: 
-    case 7:
-    case 8:  pxPerUnit = .2166; break;
-    case 9:  
-    case 10: 
-    case 11: pxPerUnit = .2333; break;
-    case 12: 
-    case 13:
-    case 14: pxPerUnit = .2000; break;
-    case 15:
-    case 16:
-    case 17:
-    case 18:  pxPerUnit = .2333; break;
-    default: pxPerUnit = 0.2167;
-  }
-  return (40+(int)(pxPerUnit*lon));
-}
-
-int yForLat(float lat)
-{
-  float pxPerUnit = 0.27;
-  return (38-(int)(pxPerUnit*lat));
-}
-
-void drawWorldMap()
-{
-  for (int row = 0; row < 6; row++)
-  {
+void drawWorldMap() {
+  for (int row = 0; row < 6; row++) {
     gotoXY(0,row);
-    for (int chr = 0; chr < 16; chr++)
-    {
+    for (int chr = 0; chr < 16; chr++) {
       for (int index = 0; index < 5; index++) {
         LcdWrite(LCD_D, WORLDMAP[(row*16)+chr][index]);
         pixels[index+chr*5][row] = WORLDMAP[(row*16)+chr][index];
@@ -352,15 +290,13 @@ void drawWorldMap()
   }
 }
 
-void initProgressBar()
-{
+void initProgressBar() {
   LcdClear();
   clearPixels();
   drawRect(10,21, 64, 5);
 }
 
-void setProgressBar(int value)
-{
+void setProgressBar(int value) {
   int startValue = ((float)prev_prog/100.0)*64;
   int newValue = ((float)value/100.0)*64;
   if (newValue < startValue) { startValue = 0; }
@@ -375,28 +311,28 @@ void setProgressBar(int value)
 }
 
 void drawMac(int x, int y){
-  drawHorizontalLineXY(2+x,	23+x,	0+y);
-  drawHorizontalLineXY(4+x,	21+x,	3+y);
+  drawHorizontalLineXY(2+x,		23+x,	0+y);
+  drawHorizontalLineXY(4+x,		21+x,	3+y);
   drawHorizontalLineXY(12+x,	13+x,	11+y);
   drawHorizontalLineXY(11+x,	14+x,	14+y);
-  drawHorizontalLineXY(4+x,	21+x,	17+y);
-  drawHorizontalLineXY(3+x,	5+x,	22+y);
+  drawHorizontalLineXY(4+x,		21+x,	17+y);
+  drawHorizontalLineXY(3+x,		5+x,	22+y);
   drawHorizontalLineXY(15+x,	21+x,	22+y);
-  drawHorizontalLineXY(1+x,	24+x,	27+y);
-  drawHorizontalLineXY(2+x,	23+x,	31+y);
+  drawHorizontalLineXY(1+x,		24+x,	27+y);
+  drawHorizontalLineXY(2+x,		23+x,	31+y);
   
   drawVerticalLineXY(2+y,		26+y,	0+x);
   drawVerticalLineXY(1+y,		1+y,	1+x);
-  drawVerticalLineXY(28+y,	30+y,	1+x);
+  drawVerticalLineXY(28+y,		30+y,	1+x);
   drawVerticalLineXY(4+y,		16+y,	3+x);
   drawVerticalLineXY(7+y,		8+y,	9+x);
-  drawVerticalLineXY(13+y,	13+y,	10+x);
+  drawVerticalLineXY(13+y,		13+y,	10+x);
   drawVerticalLineXY(7+y,		11+y,	13+x);
   drawVerticalLineXY(7+y,		8+y,	17+x);
-  drawVerticalLineXY(13+y,	13+y,	15+x);
+  drawVerticalLineXY(13+y,		13+y,	15+x);
   drawVerticalLineXY(4+y,		16+y,	22+x);
   drawVerticalLineXY(1+y,		1+y,	24+x);
-  drawVerticalLineXY(28+y,	30+y,	24+x);
+  drawVerticalLineXY(28+y,		30+y,	24+x);
   drawVerticalLineXY(2+y,		26+y,	25+x);
 }
 
@@ -408,16 +344,28 @@ void clearPixels() {
   }
 }
 
-// Enable a specific pixel
+// Enable or disable a specific pixel
+// x: 0 to 84, y: 0 to 48
 void setPixel(int x, int y, int d) {
-	int y_mod = (int)(y >> 3);
-	int y_pix = (y-(y_mod << 3));
+	if (x > 84 || y > 48) { return; }
+	// The LCD has 6 rows, with 8 pixels per  row.
+	// 'y_mod' is the row that the pixel is in.
+	// 'y_pix' is the pixel in that row we want to enable/disable
+	int y_mod = (int)(y >> 3);	// >>3 divides by 8
+	int y_pix = (y-(y_mod << 3));// <<3 multiplies by 8
 	int val = 1 << y_pix;
+	
+	/// We have to keep track of which pixels are on/off in order to
+	// write the correct character out to the LCD.
 	if (d){
 		pixels[x][y_mod] |= val;
 	} else {
 		pixels[x][y_mod] &= ~val;
 	}
+	
+	// Write the updated pixel out to the LCD
+	// TODO Check if the pixel is already in the state requested,
+	//      if so, don't write to LCD.
 	gotoXY(x,y_mod);
 	LcdWrite (1,pixels[x][y_mod]);
 }
@@ -426,10 +374,12 @@ void drawLine(int x1, int y1, int x2, int y2) {
   
 }
 
+// Draw a horizontal line of width w from x,y 
 void drawHorizontalLine(int x, int y, int w){
   drawHorizontalLineXY(x,x+w,y);
 }
 
+// Draw a horizontal line between x1 and x2 at row y
 void drawHorizontalLineXY(int x1, int x2, int y){
   for (int i=x1;i<=x2;i++)
   {
@@ -437,9 +387,11 @@ void drawHorizontalLineXY(int x1, int x2, int y){
   }
 }
 
+// Draw a vertical line of height h from x,y
 void drawVerticalLine(int x, int y, int h){
   drawVerticalLineXY(y,y+h,x);
 }
+// Draw a vertical line from y1 to y2 on column x
 void drawVerticalLineXY(int y1, int y2, int x){
   for (int i=y1;i<=y2;i++)
   {
@@ -447,6 +399,7 @@ void drawVerticalLineXY(int y1, int y2, int x){
   }
 }
 
+// Draw a rectangle of width w and height h from x,y
 void drawRect(int x, int y, int w, int h)
 {
   drawHorizontalLineXY(x,x+w,y);
@@ -455,6 +408,7 @@ void drawRect(int x, int y, int w, int h)
   drawVerticalLineXY(y,y+h,x+w);
 }
 
+// Draw a rectangle using p1(x1,y1) and p2(x2,y2) as corners
 void drawRectXY(int x1, int y1, int x2, int y2) {
   drawHorizontalLineXY(x1,x2,y1);
   drawHorizontalLineXY(x1,x2,y2);
@@ -462,6 +416,7 @@ void drawRectXY(int x1, int y1, int x2, int y2) {
   drawVerticalLineXY(y1,y2,x2);
 }
 
+// Write data out to the LCD
 void LcdWrite(byte dc, byte data) {
 	digitalWrite(PIN_DC, dc);
 	digitalWrite(PIN_SCE, LOW);
@@ -469,6 +424,7 @@ void LcdWrite(byte dc, byte data) {
 	digitalWrite(PIN_SCE, HIGH);
 }
 
+// Write a character out to the LCD
 void LcdCharacter(char character) {
   LcdWrite(LCD_D, 0x00);
   for (int index = 0; index < 5; index++) {
@@ -477,13 +433,14 @@ void LcdCharacter(char character) {
   LcdWrite(LCD_D, 0x00);
 }
 
+// Clear the LCD pixels
 void LcdClear(void) {
   for (int index = 0; index < LCD_X * LCD_Y / 8; index++) {
     LcdWrite(LCD_D, 0x00);
   }
 }
 
-
+// Init the LCD
 void LcdInitialise(void) {
   pinMode(PIN_SCE,   OUTPUT);
   pinMode(PIN_RESET, OUTPUT);
@@ -511,13 +468,13 @@ void LcdString(char *characters) {
   }
 }
 
-// Display an integer
+// Display an integer 
 void LcdInteger(int num) {
 	char buf[12];
 	LcdString(itoa(num, buf, 10));
 }
 
-// Display a float
+// Display a float, with precision
 void LcdFloat(float num, int precision) {
 	char buffer[25]; 
 	LcdString(floatToString(buffer,num, precision)); 
